@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import Chessboard from "chessboardjsx";
 import { Chess } from "chess.js";
 
-export default function MainComponent() {
+export default function Content() {
   const [fen, setFen] = useState("start");
-  const [theme, setTheme] = useState("light"); // Add state for theme
+
+  const [playerColor] = useState("white");
+
   let game = useRef(null);
 
   useEffect(() => {
@@ -12,24 +14,17 @@ export default function MainComponent() {
   }, []);
 
   const containerStyle = {
-    marginTop: "4rem",
+    marginTop: "2rem",
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
-    
-    backgroundColor: theme === "light" ? "#ffffff" : "#222222", // Apply theme background color
-    color: theme === "light" ? "#000000" : "#ffffff", // Apply theme text color
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light"); // Toggle theme
   };
 
   const onDropMove = ({ sourceSquare, targetSquare }) => {
     try {
       let move = game.current.move({
         from: sourceSquare,
-        to: targetSquare
+        to: targetSquare,
       });
 
       // If move is null, it's an illegal move
@@ -38,6 +33,16 @@ export default function MainComponent() {
       }
 
       setFen(game.current.fen());
+
+      //Check player color to move accordingly
+      if (playerColor === "whtie" && !game.current.game_over()) {
+        setTimeout(() => {
+          const computerTurn = game.current.moveBest();
+          if (computerTurn) {
+            setFen(game.current.fen());
+          }
+        }, 400);
+      }
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -45,14 +50,21 @@ export default function MainComponent() {
 
   const resetGame = () => {
     game.current.clear();
-    game.current.load("start");
+    game.current.reset();
     setFen("start");
   };
 
   return (
     <>
-      <button onClick={resetGame}>Restart</button>
-      <button onClick={toggleTheme}>Toggle Theme</button> {/* Add button to toggle theme */}
+      <div style={containerStyle}>
+        <button
+          onClick={resetGame}
+          type="button"
+          className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+        >
+          Restart Game
+        </button>
+      </div>
       <div style={containerStyle}>
         {game.current && game.current.game_over ? "Game over" : ""}
         <Chessboard position={fen} onDrop={onDropMove} />
