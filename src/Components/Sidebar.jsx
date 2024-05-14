@@ -1,19 +1,9 @@
 import { useState } from "react";
 
 export default function Sidebar() {
-  const [theme, setTheme] = useState("light"); // Add state for theme
-
-  const containerStyle = {
-    backgroundColor: theme === "light" ? "#f8f9fa" : "#343a40", // Apply light or dark background color
-    color: theme === "light" ? "#000000" : "#ffffff", // Apply light or dark text color
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light"); // Toggle theme
-  };
   return (
     <>
-      <div style={containerStyle}>
+      <div>
         <span
           className="absolute text-white text-4xl top-5 left-4 cursor-pointer"
           onclick="openSidebar()"
@@ -69,15 +59,6 @@ export default function Sidebar() {
             <h1 className="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
               <i class="bi bi-person-fill"></i> Ahmed
             </h1>
-          </div>
-          <div style={containerStyle}>
-            <button
-              onClick={toggleTheme}
-              type="button"
-              class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-            >
-              Toggle Theme
-            </button>
           </div>
         </div>
       </div>
